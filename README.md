@@ -2,4 +2,4 @@
 
 C. P. P. Bach
 
-is an algrotihmic music composer written in C++
+is an algorithmic music composer written in C++

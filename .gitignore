@@ -37,4 +37,6 @@ install_manifest.txt
 # Shit
 .DS_Store
 
+lib/midifile
+
 

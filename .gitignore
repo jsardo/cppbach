@@ -39,4 +39,4 @@ install_manifest.txt
 
 lib/midifile
 lib/portmidi
-
+lib/rtmidi

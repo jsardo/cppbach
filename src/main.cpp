@@ -1,62 +1,89 @@
 #include "MidiFile.h"
 #include <iostream>
-
-using namespace std;
+#include <vector>
 
 typedef unsigned char uchar;
 
-///////////////////////////////////////////////////////////////////////////
+/*
+ * convention for note names:
+ *   0 <-> A
+ *   1 <-> A#
+ *   2 <-> B
+ *   3 <-> C
+ *   4 <-> C# 
+ *   5 <-> D
+ *   6 <-> D#
+ *   7 <-> E
+ *   8 <-> F
+ *   9 <-> F# 
+ *  10 <-> G
+ *  11 <-> G#
+ */
 
-int main(int argc, char** argv) {
-    MidiFile outputfile;          // create an empty MIDI file with one track
-    outputfile.absoluteTicks();  // time information stored as absolute time
-                                         // (will be coverted to delta time when written)
-    outputfile.addTrack(2);      // Add another two tracks to the MIDI file
-    vector<uchar> midievent;      // temporary storage for MIDI events
-    midievent.resize(3);          // set the size of the array to 3 bytes
-    int tpq = 120;                  // default value in MIDI file is 48
+class Note {
+    public:
+        int name;
+        int octave;
+        int value; 
+
+        Note(int n, int o, int v): name(n % 12), octave(o), value(v) { }
+        int note_to_int() { return 21 + 12*octave + name; }
+};
+
+typedef std::vector<Note> Track;
+
+void write_midi(std::vector<Track> melodies)
+{
+    MidiFile outputfile;
+    outputfile.absoluteTicks();
+
+    int melody_count = melodies.size();
+    outputfile.addTrack(melody_count);
+    std::vector<uchar> midievent;
+    midievent.resize(3);
+    int tpq = 120; // ticks per quarter note
     outputfile.setTicksPerQuarterNote(tpq);
-
-    // data to write to MIDI file: (60 = middle C)
-    // C5 C  G G A A G-  F F  E  E  D D C-
-    int melody[50]  = {72,72,79,79,81,81,79,77,77,76,76,74,74,72,-1};
-    int mrhythm[50] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2,-1};
-
-    // C3 C4 E C F C E C D B3 C4 A3 F G C-
-    int bass[50] =    {48,60,64,60,65,60,64,60,62,59,60,57,53,55,48,-1};
-    int brhythm[50]= { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,-1};
-
-
-    // store a melody line in track 1 (track 0 left empty for conductor info)
-    int i=0;
-    int actiontime = 0;        // temporary storage for MIDI event time
-    midievent[2] = 64;         // store attack/release velocity for note command
-    while (melody[i] >= 0) {
-        midievent[0] = 0x90;      // store a note on command (MIDI channel 1)
-        midievent[1] = melody[i];
-        outputfile.addEvent(1, actiontime, midievent);
-        actiontime += tpq * mrhythm[i];
-        midievent[0] = 0x80;      // store a note on command (MIDI channel 1)
-        outputfile.addEvent(1, actiontime, midievent);
-        i++;
+    
+    for (auto melody : melodies) {
+        int actiontime = 0;
+        midievent[2] = 64;
+        for (auto note : melody) {
+            midievent[0] = 0x90;
+            midievent[1] = note.note_to_int();
+            outputfile.addEvent(1, actiontime, midievent);
+            actiontime += tpq * note.value;
+            midievent[0] = 0x80;
+            outputfile.addEvent(1, actiontime, midievent);
+        }
     }
-
-    // store a base line in track 2
-    i=0;
-    actiontime = 0;             // reset time for beginning of file
-    midievent[2] = 64;
-    while (bass[i] >= 0) {
-        midievent[0] = 0x90;
-        midievent[1] = bass[i];
-        outputfile.addEvent(2, actiontime, midievent);
-        actiontime += tpq * brhythm[i];
-        midievent[0] = 0x80;
-        outputfile.addEvent(2, actiontime, midievent);
-        i++;
-    }
-
-    outputfile.sortTracks();            // make sure data is in correct order
-    outputfile.write("twinkle.mid"); // write Standard MIDI File twinkle.mid
-    return 0;
+    outputfile.sortTracks();
+    outputfile.write("test.mid");
 }
 
+int main()
+{
+    std::vector<Track> song;
+    vector<Note> melody1, melody2, melody3, melody4;
+
+    // A minor arpeggio
+    melody1.push_back(Note(3, 5, 1));
+    melody1.push_back(Note(0, 5, 1));
+    melody1.push_back(Note(3, 5, 1));
+    melody1.push_back(Note(7, 5, 1));
+    melody1.push_back(Note(3, 5, 1));
+    melody1.push_back(Note(7, 5, 1));
+    melody1.push_back(Note(0, 6, 1));
+    song.push_back(melody1);
+
+    melody2.push_back(Note(0, 4, 1));
+    melody2.push_back(Note(7, 3, 1));
+    melody2.push_back(Note(0, 4, 1));
+    melody2.push_back(Note(3, 4, 1));
+    melody2.push_back(Note(0, 4, 1));
+    melody2.push_back(Note(3, 4, 1));
+    melody2.push_back(Note(7, 4, 1));
+    song.push_back(melody2);
+
+    write_midi(song);
+    return 0;
+}

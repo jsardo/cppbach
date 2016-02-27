@@ -149,6 +149,19 @@ portmidi/fast:
 	$(MAKE) -f CMakeFiles/portmidi.dir/build.make CMakeFiles/portmidi.dir/build
 .PHONY : portmidi/fast
 
+#=============================================================================
+# Target rules for targets named rtmidi
+
+# Build rule for target.
+rtmidi: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rtmidi
+.PHONY : rtmidi
+
+# fast build rule for target.
+rtmidi/fast:
+	$(MAKE) -f CMakeFiles/rtmidi.dir/build.make CMakeFiles/rtmidi.dir/build
+.PHONY : rtmidi/fast
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -186,6 +199,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... portmidi"
 	@echo "... cppbach"
+	@echo "... rtmidi"
 	@echo "... midifile"
 	@echo "... src/main.o"
 	@echo "... src/main.i"

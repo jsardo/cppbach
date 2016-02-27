@@ -4,8 +4,6 @@
 
 typedef unsigned char uchar;
 
-///////////////////////////////////////////////////////////////////////////
-
 /*
  * convention for note names:
  *   0 <-> A
@@ -67,16 +65,25 @@ int main()
     std::vector<Track> song;
     vector<Note> melody1, melody2, melody3, melody4;
 
-    melody1.push_back(Note(0, 4, 10));
-    melody2.push_back(Note(4, 4, 10));
-    melody3.push_back(Note(7, 4, 10));
-    melody4.push_back(Note(0, 3, 10));
+    // A minor arpeggio
+    melody1.push_back(Note(3, 5, 1));
+    melody1.push_back(Note(0, 5, 1));
+    melody1.push_back(Note(3, 5, 1));
+    melody1.push_back(Note(7, 5, 1));
+    melody1.push_back(Note(3, 5, 1));
+    melody1.push_back(Note(7, 5, 1));
+    melody1.push_back(Note(0, 6, 1));
     song.push_back(melody1);
+
+    melody2.push_back(Note(0, 4, 1));
+    melody2.push_back(Note(7, 3, 1));
+    melody2.push_back(Note(0, 4, 1));
+    melody2.push_back(Note(3, 4, 1));
+    melody2.push_back(Note(0, 4, 1));
+    melody2.push_back(Note(3, 4, 1));
+    melody2.push_back(Note(7, 4, 1));
     song.push_back(melody2);
-    song.push_back(melody3);
-    song.push_back(melody4);
 
     write_midi(song);
     return 0;
 }
-

@@ -41,7 +41,7 @@ set(PORTMIDI_INCLUDE_DIR ${PORTMIDI_ROOT}/include)
 ExternalProject_Add(
     portmidi
     PREFIX ${PORTMIDI_ROOT}
-    SVN_REPOSITORY "https://svn.code.sf.net/p/portmedia/code/portmidi/trunk/"
+    SVN_REPOSITORY "http://svn.code.sf.net/p/portmedia/code/portmidi/trunk/"
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     UPDATE_COMMAND ""
     PATCH_COMMAND sed -i -e "s/CMAKE_OSX_ARCHITECTURES i386 ppc x86_64/CMAKE_OSX_ARCHITECTURES i386 x86_64/g" CMakeLists.txt
@@ -56,7 +56,7 @@ add_dependencies(libportmidi portmidi)
 
 set(RTMIDI_ROOT ${CMAKE_SOURCE_DIR}/lib/rtmidi)
 set(RTMIDI_LIB_DIR ${RTMIDI_ROOT}/lib)
-set(RTMIDI_INCLUDE_DIR ${RTMIDI_ROOT}/include)
+set(RTMIDI_INCLUDE_DIR ${RTMIDI_ROOT}/include/rtmidi)
 
 ExternalProject_Add(
     rtmidi
@@ -72,15 +72,36 @@ add_library(librtmidi STATIC IMPORTED)
 set_target_properties(librtmidi PROPERTIES IMPORTED_LOCATION ${RTMIDI_LIB_DIR}/librtmidi.a)
 add_dependencies(librtmidi rtmidi)
 
-# Create dependency of MainTest on googletest
+# ==========
+# Frameworks
+# ==========
 
+find_library(CORE_MIDI CoreMIDI)
+if (NOT CORE_MIDI)
+    message(FATAL_ERROR "CoreMIDI not found")
+endif()
+
+find_library(CORE_AUDIO CoreAudio)
+if (NOT CORE_AUDIO)
+    message(FATAL_ERROR "CoreAudio not found")
+endif()
+
+find_library(CORE_FOUNDATION CoreFoundation)
+if (NOT CORE_FOUNDATION)
+    message(FATAL_ERROR "CoreFoundation not found")
+endif()
+
+# ====
+# Main
+# ====
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 include_directories(${MIDIFILE_INCLUDE_DIR})
 include_directories(${PORTMIDI_INCLUDE_DIR})
+include_directories(${RTMIDI_INCLUDE_DIR})
 
 set(SOURCE_FILES src/main.cpp)
 
 add_executable(cppbach ${SOURCE_FILES})
 
-target_link_libraries(cppbach libmidifile libportmidi librtmidi)
+target_link_libraries(cppbach libmidifile libportmidi librtmidi ${CORE_MIDI} ${CORE_AUDIO} ${CORE_FOUNDATION})

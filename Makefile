@@ -48,10 +48,10 @@ RM = /usr/local/Cellar/cmake/3.4.3/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/zihao/Projects/cppbach
+CMAKE_SOURCE_DIR = /Users/zihao/projects/cppbach
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/zihao/Projects/cppbach
+CMAKE_BINARY_DIR = /Users/zihao/projects/cppbach
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zihao/Projects/cppbach/CMakeFiles /Users/zihao/Projects/cppbach/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zihao/projects/cppbach/CMakeFiles /Users/zihao/projects/cppbach/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zihao/Projects/cppbach/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zihao/projects/cppbach/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -136,6 +136,19 @@ midifile/fast:
 	$(MAKE) -f CMakeFiles/midifile.dir/build.make CMakeFiles/midifile.dir/build
 .PHONY : midifile/fast
 
+#=============================================================================
+# Target rules for targets named portmidi
+
+# Build rule for target.
+portmidi: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 portmidi
+.PHONY : portmidi
+
+# fast build rule for target.
+portmidi/fast:
+	$(MAKE) -f CMakeFiles/portmidi.dir/build.make CMakeFiles/portmidi.dir/build
+.PHONY : portmidi/fast
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -171,6 +184,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... portmidi"
 	@echo "... cppbach"
 	@echo "... midifile"
 	@echo "... src/main.o"

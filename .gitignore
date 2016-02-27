@@ -38,5 +38,5 @@ install_manifest.txt
 .DS_Store
 
 lib/midifile
-
+lib/portmidi
 

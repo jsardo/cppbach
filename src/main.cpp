@@ -1,7 +1,7 @@
 #include "MidiFile.h"
 #include "RtMidi.h"
+#include "note.h"
 #include <iostream>
-#include <vector>
 #include <algorithm>
 
 using namespace std;
@@ -16,34 +16,6 @@ using namespace std;
 #endif
 
 typedef unsigned char uchar;
-
-/*
- * convention for note names:
- *   0 <-> A
- *   1 <-> A#
- *   2 <-> B
- *   3 <-> C
- *   4 <-> C# 
- *   5 <-> D
- *   6 <-> D#
- *   7 <-> E
- *   8 <-> F
- *   9 <-> F# 
- *  10 <-> G
- *  11 <-> G#
- */
-
-class Note {
-public:
-    int name;
-    int octave;
-    int value; 
-
-    Note(int n, int o, int v): name(n % 12), octave(o), value(v) { }
-    int note_to_int() { return 21 + 12*octave + name; }
-};
-
-typedef std::vector<Note> Track;
 
 MidiFile write_midi(std::vector<Track> melodies)
 {
@@ -190,7 +162,6 @@ int main()
     std::vector<Track> song;
     vector<Note> melody1, melody2, melody3, melody4;
 
-    // A minor arpeggio
     melody1.push_back(Note(3, 5, 1));
     melody1.push_back(Note(0, 5, 1));
     melody1.push_back(Note(3, 5, 1));
@@ -218,6 +189,6 @@ int main()
     SLEEP(100);
 
     play_midi(midiout, song);
-    
+
     return 0;
 }

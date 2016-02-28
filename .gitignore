@@ -36,7 +36,7 @@ install_manifest.txt
 
 # Shit
 .DS_Store
-
+.swp
 lib/midifile
 lib/portmidi
 lib/rtmidi

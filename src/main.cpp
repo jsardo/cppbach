@@ -2,6 +2,7 @@
 #include "RtMidi.h"
 #include "note.h"
 #include <iostream>
+#include <cstdlib>
 #include <algorithm>
 
 using namespace std;
@@ -131,7 +132,7 @@ void play_midi(RtMidiOut* midiout, std::vector<Track> tracks)
 
         for(auto j: message) 
         {
-            cout << hex << (int)j << " ";
+            cout << (int)j << " ";
         }
         cout << endl;
 
@@ -140,9 +141,10 @@ void play_midi(RtMidiOut* midiout, std::vector<Track> tracks)
 
         if(i < midinotes.size() - 1)
         {
-            // cout << midinotes[i+1].time - midinote.time << endl;
+            //cout << midinotes[i+1].time << " " << midinote.time << endl;
             SLEEP((midinotes[i+1].time - midinote.time) * 4);
         }
+        //SLEEP(5);
     }
 	SLEEP(100);
 
@@ -156,28 +158,41 @@ void play_midi(RtMidiOut* midiout, std::vector<Track> tracks)
     midiout->sendMessage( &message );
 }
 
+int zrand()
+{
+    static int x = 0;
+    x ++ ;
+    x *= 4;
+    x = x%123123423;
+    return x*2;
+}
+
 
 int main()
 {
     std::vector<Track> song;
     vector<Note> melody1, melody2, melody3, melody4;
 
-    melody1.push_back(Note(3, 5, 1));
-    melody1.push_back(Note(0, 5, 1));
-    melody1.push_back(Note(3, 5, 1));
-    melody1.push_back(Note(7, 5, 1));
-    melody1.push_back(Note(3, 5, 1));
-    melody1.push_back(Note(7, 5, 1));
-    melody1.push_back(Note(0, 6, 1));
-    song.push_back(melody1);
+    int cmajor[] = {3,5,7,8,10,0,2};
 
-    melody2.push_back(Note(0, 4, 1));
-    melody2.push_back(Note(7, 3, 1));
-    melody2.push_back(Note(0, 4, 1));
-    melody2.push_back(Note(3, 4, 1));
-    melody2.push_back(Note(0, 4, 1));
-    melody2.push_back(Note(3, 4, 1));
-    melody2.push_back(Note(7, 4, 1));
+    for(int i = 0; i!= 10; i++) {
+        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
+        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
+        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
+        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
+        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
+        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
+        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
+        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
+        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
+        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
+        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
+        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
+        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
+        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
+    }
+
+    song.push_back(melody1);
     song.push_back(melody2);
 
     MidiFile midifile = write_midi(song);

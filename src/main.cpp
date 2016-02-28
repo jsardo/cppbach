@@ -43,7 +43,7 @@ MidiFile write_midi(std::vector<Track> melodies)
         }
     }
     outputfile.sortTracks();
-    outputfile.write("test.mid");
+    outputfile.write("compositions/test.mid");
     return outputfile;
 }
 
@@ -134,6 +134,7 @@ void play_midi(RtMidiOut* midiout, std::vector<Track> tracks)
         {
             cout << (int)j << " ";
         }
+        cout << midinote.time;
         cout << endl;
 
         midiout->sendMessage( &message );
@@ -142,9 +143,9 @@ void play_midi(RtMidiOut* midiout, std::vector<Track> tracks)
         if(i < midinotes.size() - 1)
         {
             //cout << midinotes[i+1].time << " " << midinote.time << endl;
-            SLEEP((midinotes[i+1].time - midinote.time) * 4);
+            SLEEP((midinotes[i+1].time - midinote.time + 1));
         }
-        //SLEEP(5);
+        SLEEP(5);
     }
 	SLEEP(100);
 
@@ -161,35 +162,41 @@ void play_midi(RtMidiOut* midiout, std::vector<Track> tracks)
 int zrand()
 {
     static int x = 0;
-    x ++ ;
+    x += 23 ;
     x *= 4;
-    x = x%123123423;
-    return x*2;
+    x = x%2394;
+    return x+4;
 }
-
 
 int main()
 {
     std::vector<Track> song;
     vector<Note> melody1, melody2, melody3, melody4;
 
-    int cmajor[] = {3,5,7,8,10,0,2};
+    int scale1[] = {5,7,9,0,2};
+    int scale1size = 5;
+    int shift1 = 0;
+
+    int scale2[] = {3,5,7,8,10,0,2};
+    int scale2size = 7;
+    int shift2 = 2;
 
     for(int i = 0; i!= 10; i++) {
-        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
-        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
-        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
-        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
-        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
-        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
-        melody1.push_back(Note(cmajor[zrand()%7]+3, rand()%2+5, rand()%3));
-        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
-        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
-        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
-        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
-        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
-        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
-        melody2.push_back(Note(cmajor[zrand()%7]+3, rand()%2+3, rand()%3));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, rand()%4 + 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, rand()%4 + 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, rand()%4 + 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, rand()%4 + 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%2+4, rand()%4 + 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%2+4, rand()%4 + 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%3+4, rand()%4 + 1));
+
+        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+1, rand()%4 + 1));
+        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+1, rand()%4 + 1));
+        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
+        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
+        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
+        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
+        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
     }
 
     song.push_back(melody1);

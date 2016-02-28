@@ -1,4 +1,5 @@
 #include "MidiFile.h"
+#include "generate_melody.h"
 #include <iostream>
 #include <vector>
 
@@ -20,6 +21,7 @@ typedef unsigned char uchar;
  *  11 <-> G#
  */
 
+/*
 class Note {
     public:
         int name;
@@ -31,6 +33,7 @@ class Note {
 };
 
 typedef std::vector<Note> Track;
+*/
 
 void write_midi(std::vector<Track> melodies)
 {
@@ -62,27 +65,10 @@ void write_midi(std::vector<Track> melodies)
 
 int main()
 {
+    srand(1234);
     std::vector<Track> song;
-    vector<Note> melody1, melody2, melody3, melody4;
-
-    // A minor arpeggio
-    melody1.push_back(Note(3, 5, 1));
-    melody1.push_back(Note(0, 5, 1));
-    melody1.push_back(Note(3, 5, 1));
-    melody1.push_back(Note(7, 5, 1));
-    melody1.push_back(Note(3, 5, 1));
-    melody1.push_back(Note(7, 5, 1));
-    melody1.push_back(Note(0, 6, 1));
-    song.push_back(melody1);
-
-    melody2.push_back(Note(0, 4, 1));
-    melody2.push_back(Note(7, 3, 1));
-    melody2.push_back(Note(0, 4, 1));
-    melody2.push_back(Note(3, 4, 1));
-    melody2.push_back(Note(0, 4, 1));
-    melody2.push_back(Note(3, 4, 1));
-    melody2.push_back(Note(7, 4, 1));
-    song.push_back(melody2);
+    song.push_back(generate_track(20, 5, 1));
+    song.push_back(generate_track(10, 2, 2));
 
     write_midi(song);
     return 0;

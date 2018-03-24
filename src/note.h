@@ -16,17 +16,17 @@
  */
 
 class Note {
-    public:
-        int name;
-        int octave;
-        int value; 
+public:
+    int name;
+    int octave;
+    double value; 
 
-        Note(int n, int o, int v): name(n % 12), octave(o), value(v) { }
-        int note_to_int() const { return 21 + 12*octave + name; }
+    Note(int n, int o, double v): name(n % 12), octave(o), value(v) { }
+    int note_to_int() const { return 21 + 12*octave + name; }
 
-        int operator-(const Note& n) {
-            return std::abs(note_to_int() - n.note_to_int());
-        }
+    int operator-(const Note& n) {
+        return std::abs(note_to_int() - n.note_to_int());
+    }
 };
 
 typedef std::vector<Note> Track;

@@ -143,7 +143,7 @@ void play_midi(RtMidiOut* midiout, std::vector<Track> tracks)
         if(i < midinotes.size() - 1)
         {
             //cout << midinotes[i+1].time << " " << midinote.time << endl;
-            SLEEP((midinotes[i+1].time - midinote.time + 1));
+            SLEEP((midinotes[i+1].time - midinote.time + 1) * 4);
         }
         SLEEP(5);
     }
@@ -159,13 +159,14 @@ void play_midi(RtMidiOut* midiout, std::vector<Track> tracks)
     midiout->sendMessage( &message );
 }
 
+
+int x;
 int zrand()
 {
-    static int x = 0;
-    x += 23 ;
-    x *= 4;
-    x = x%2394;
-    return x+4;
+    x += 332 ;
+    x *= 54;
+    x = x%322341;
+    return x;
 }
 
 int main()
@@ -173,34 +174,72 @@ int main()
     std::vector<Track> song;
     vector<Note> melody1, melody2, melody3, melody4;
 
-    int scale1[] = {5,7,9,0,2};
+    int s = time(NULL);
+    //s = 1456630549;
+    //276061243
+    cout << s << endl;
+    srand(s);
+    x = rand();
+    //cout << x << endl;;
+
+    // int scale1[] = {5,7,9,0,2};
+    // int scale1size = 5;
+    // int shift1 = 0;
+
+    // int scale1[] = {3,5,7,8,10,0,2};
+    // int scale1size = 7;
+    // int shift1 = 0;
+
+    int scale1[] = {3,5,7,10,0};
     int scale1size = 5;
     int shift1 = 0;
 
     int scale2[] = {3,5,7,8,10,0,2};
-    int scale2size = 7;
-    int shift2 = 2;
+    int scale2size = sizeof(scale2)/sizeof(int);
+    int shift2 = 0;
 
     for(int i = 0; i!= 10; i++) {
-        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, rand()%4 + 1));
-        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, rand()%4 + 1));
-        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, rand()%4 + 1));
-        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, rand()%4 + 1));
-        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%2+4, rand()%4 + 1));
-        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%2+4, rand()%4 + 1));
-        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%3+4, rand()%4 + 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%2+4, 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%1+4, 1));
+        melody1.push_back(Note(scale1[zrand() % scale1size]+shift1, rand()%2+3, 1));
+       
+        Note note = Note(melody1[melody1.size()-4].name, rand()%2+2, 0.25);
+        Note note2 = note;
+        note2.name += 4;
+        Note note3 = note;
+        note3.name += 7;
 
-        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+1, rand()%4 + 1));
-        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+1, rand()%4 + 1));
-        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
-        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
-        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
-        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
-        melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, rand()%4 + 1));
+        melody2.push_back(note);
+        melody2.push_back(note2);
+        melody2.push_back(note3);
+        melody2.push_back(note2);
+        melody2.push_back(note);
+        melody2.push_back(note2);
+        melody2.push_back(note3);
+        melody2.push_back(note2);
+        melody2.push_back(note);
+        melody2.push_back(note2);
+        melody2.push_back(note3);
+        melody2.push_back(note2);
+        melody2.push_back(note);
+        melody2.push_back(note2);
+        melody2.push_back(note3);
+        melody2.push_back(note2);
+
+
+        // melody2.push_back();
+        // melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+1, (rand()%3 + 1)/4.0));
+        // melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, (rand()%3 + 1)/2.0));
+        // melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, (rand()%3 + 1)/4.0));
+        // melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, (rand()%3 + 1)/4.0));
+        // melody2.push_back(Note(scale2[zrand() % scale2size]+shift2, rand()%2+2, (rand()%3 + 1)/2.0));
     }
 
     song.push_back(melody1);
     song.push_back(melody2);
+
+    //song.push_back(melody3);
 
     MidiFile midifile = write_midi(song);
 
